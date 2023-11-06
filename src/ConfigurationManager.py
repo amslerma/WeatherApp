@@ -1,0 +1,1 @@
+# A class to manage configuration settings, such as API keys and user settings (e.g. units of measurement).
