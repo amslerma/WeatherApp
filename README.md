@@ -21,7 +21,7 @@
     Python-Anwendung entwickeln, eine Präsentation im PDF-Format über Moodle einreichen und dabei eine kurze 
     Projektvorstellung sowie einen Link zum GitHub-Repository inklusive der fertigen, lauffähigen Anwendung und einer 
     README-Datei bereitstellen.```<br>
-**Repository:** 
+**Repository:** https://github.com/amslerma/WeatherApp
 
 ---
 ## PROJEKT-BESCHREIBUNG
