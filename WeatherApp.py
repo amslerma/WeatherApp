@@ -4,7 +4,7 @@ import requests
 import json
 
 
-# get weather-data from open-meteo api and saves to temporary file
+# Wetterdaten von der open-meteo API holen und speichern (verarbeiten)
 def get_weather():
     url = "https://api.open-meteo.com/v1/forecast"
 
@@ -18,15 +18,15 @@ def get_weather():
     }
 
     try:
-        # `request` ist eine python-bibliothek, die HTTP-anfragen vereinfacht (muss heruntergeladen werden)
+        # `request` ist eine Python-Bibliothek, die HTTP-Anfragen vereinfacht (muss heruntergeladen werden)
         response = requests.get(url, params=params)
-        response.raise_for_status()  # wirft eine ausnahme, wenn der HTTP-statuscode nicht erfolgreich ist
+        response.raise_for_status()  # wirft eine Ausnahme, wenn der HTTP-Statuscode nicht erfolgreich ist
 
         weather_data = json.loads(response.text)
 
         # Der Pfad wird relativ zum aktuellen Arbeitsverzeichnis des Projekts angegeben
         temp_dir = os.path.join(os.getcwd(), "temp_directory")
-        os.makedirs(temp_dir, exist_ok=True)  # Erstelle das Verzeichnis, falls es nicht existiert
+        os.makedirs(temp_dir, exist_ok=True)  # Erstellt das Verzeichnis, falls es nicht existiert
 
         with tempfile.NamedTemporaryFile(mode='w', delete=False, dir=temp_dir) as temp_file:
             json.dump(weather_data, temp_file)
