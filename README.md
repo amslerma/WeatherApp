@@ -25,17 +25,17 @@
 
 ---
 ## PROJEKT-BESCHREIBUNG
-Eine Wetter-App, die Benutzern erlaubt, aktuelle Wetterinformationen abzurufen. Nutzer können Wetterdaten wie Temperatur, 
-    Luftdruck, Luftfeuchtigkeit und Wetterzustand für verschiedene Städte sehen. Das Ziel ist es, präzise Wettervorhersagen 
-    zur Verfügung zu stellen, die für die tägliche Planung nützlich sind.
+Eine Wetter-App, die Benutzern erlaubt, aktuelle Wetterinformationen abzurufen. Nutzer können Wetterdaten wie **Temperatur**, 
+    **Niederschlagswahrscheinlichkeit (Regen, Schauer, Schnee)**, **Windgeschwindigkeit** und **Wetterzustand (gem. WMO)** für verschiedene Städte abrufen. 
+    Das Ziel ist es, präzise Wettervorhersagen zur Verfügung zu stellen, die für die tägliche Planung von Aktivitäten im Freien nützlich sind.
 
 Voraussichtliche Beschränkungen / out of Scope (auf Grund der zunehmenden Komplexität)
 - lokales file mit statischen Wetterdaten eines Wetterdienstes
 - Ggf. beschränkung auf Orte/Städte in der Schweiz
 - kein UI, sondern eine Konsolen basierte Ein-/Ausgabe der benutzerinteraktionen
 
-Mögliche Datenquellen:
-OpenWeatherMap, Weather API oder MetaWeather
+Mögliche Datenquelle:
+https://open-meteo.com/
 
 ---
 ## USER-STORIES
@@ -43,24 +43,26 @@ OpenWeatherMap, Weather API oder MetaWeather
 ### User-Story 1: Wetterabruf
 **Als** Freizeitsportler  
 **möchte ich** das aktuelle Wetter in meiner Stadt einsehen können  
-**damit ich** entscheiden kann, ob ich draußen joggen gehen kann.
+**damit ich** entscheiden kann, ob ich draussen joggen gehen kann.
 
 #### Akzeptanzkriterien:
 - Ich kann meine Stadt eingeben und eine Anfrage stellen.
-- Ich sehe die aktuellen Wetterbedingungen, einschliesslich Temperatur und Niederschlag.
+- Ich sehe die aktuellen Wetterbedingungen, einschliesslich Temperatur und Niederschlag, Niederschlagswahrscheinlichkeit (Regen, Schauer, Schnee),
+Windgeschwindigkeit und Wetterzustand gem WMO.
 
 ### User-Story 2: Vorhersage
-**Als** Reisebegeisterte
-**möchte ich** eine 5-Tage-Wettervorhersage für beliebige Orte erhalten  
+**Als** Reisende<br>
+**möchte ich** eine 7-Tage-Wettervorhersage für beliebige Orte erhalten  
 **damit ich** meine Reisen entsprechend planen kann.
 
 #### Akzeptanzkriterien:
 - Ich kann den Namen einer Stadt eingeben und eine Wettervorhersage anfordern.
-- Ich erhalte eine Wettervorhersage für die nächsten fünf Tage, einschliesslich Temperaturtrends und allgemeiner Wetterbedingungen.
+- Ich erhalte eine Wettervorhersage für die nächsten fünf Tage, einschliesslich Temperaturtrends und 
+allgemeiner Wetterbedingungen Wetterzustand
 
 ### User-Story 3: Benutzerdefinierte Einstellungen
 **Als** Benutzer  
-**möchte ich** die Option haben, die Wettereinheiten (Celsius, Fahrenheit) zu wählen  
+**möchte ich** die Option haben, die Wettereinheiten Europäisch(Celsius/Km/h/mm), Englisch(Fahrenheit/Mph/Inch) zu wählen  
 **damit ich** die Daten in einem für mich verständlichen Format sehen kann.
 
 #### Akzeptanzkriterien:
