@@ -3,6 +3,7 @@ import tempfile
 import requests
 import json
 
+
 # get weather-data from open-meteo api and saves to temporary file
 def get_weather():
     url = "https://api.open-meteo.com/v1/forecast"
@@ -16,9 +17,11 @@ def get_weather():
         "timezone": "Europe/Berlin"
     }
 
-    response = requests.get(url, params=params)
+    try:
+        # `request` ist eine python-bibliothek, die HTTP-anfragen vereinfacht (muss heruntergeladen werden)
+        response = requests.get(url, params=params)
+        response.raise_for_status()  # wirft eine ausnahme, wenn der HTTP-statuscode nicht erfolgreich ist
 
-    if response.status_code == 200:
         weather_data = json.loads(response.text)
 
         # Der Pfad wird relativ zum aktuellen Arbeitsverzeichnis des Projekts angegeben
@@ -29,9 +32,12 @@ def get_weather():
             json.dump(weather_data, temp_file)
             temp_file_path = temp_file.name
             print(f"Daten wurden in die temporäre Datei {temp_file_path} geschrieben.")
-
-    else:
-        print(f"Fehler beim Abrufen der Wetterdaten. Statuscode: {response.status_code}")
+    except requests.exceptions.RequestException as e:
+        print(f"Fehler beim Senden der HTTP-Anfrage: {e}")
+    except json.JSONDecodeError as e:
+        print(f"Fehler beim Verarbeiten der JSON-Antwort: {e}")
+    except Exception as e:
+        print(f"Allgemeiner Fehler: {e}")
 
 
 if __name__ == "__main__":
