@@ -1,4 +1,12 @@
 # TODO`s
+> **_TODO:_** Attribute gem. User-Story abrufen (API- Abruf anpassen) (Amsler)
+
+> **_TODO:_** Location Parameter extrahieren und API übergeben (Zbinden)
+
+> **_TODO:_** Konsolen Ein-/Ausgabe implementieren
+
+> **_TODO:_** User-Story 3 (sobald 1&2 fertig)
+
 > **_TODO:_** Präsentation vorbereiten
 >> * **Umfang:** 15min (Termin tbd)
 >>   * Thema vorstellen
@@ -6,16 +14,20 @@
 >>   * PM (Arbeitsform, Zusammenarbeit, Learnings (/Probleme),
 >>   * Live-demo Applikation
 
-> **_TODO:_** Abschlussdoku erstellen
+> **_TODO:_** Abschlussdokumentation erstellen
 >> * The project work is due on **January 7, 2024, 23.55** (Moodle upload, one PDF file per group).
 >> * This PDF file should comprise:
 >>      * a short presentation
 >>      * the GitHub URL (with a README file), where the PyCharm application is hosted
 
+> **_TODO:_** Datenmodellierung & Beschreibung
+
+> **_TODO:_** README vervollständigen
+
 ---
 # WETTER-APP PROJEKT
 
-**Gruppe:** Marco Amsler, Jim Stewart, Kirushanth Suthananthan, Joshua Zbinden<br>
+**Gruppe:** Marco Amsler, Jim Stewart, Kirushanth Suthananthan, Dominik Meyer, Joshua Zbinden<br>
 **Aufgabe:** In einer Gruppe eine lauffähige Python-Applikation entwickeln.<br>
 **Ziel:** ```Bis spätestens am 7. Januar 2023 um 23:55 Uhr in der angemeldeten Gruppe eine voll funktionsfähige 
     Python-Anwendung entwickeln, eine Präsentation im PDF-Format über Moodle einreichen und dabei eine kurze 
