@@ -3,7 +3,7 @@
 
 > **_TODO:_** Location Parameter extrahieren und API übergeben (Zbinden)
 
-> **_TODO:_** Konsolen Ein-/Ausgabe implementieren
+> **_TODO:_** Konsolen Ein-/Ausgabe implementieren (Kiru)
 
 > **_TODO:_** User-Story 3 (sobald 1&2 fertig)
 
