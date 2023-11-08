@@ -2,6 +2,56 @@ import os
 import tempfile
 import requests
 import json
+import pandas as pd
+import re
+import numpy
+
+
+# Extracts the long and lat number from the string.
+def regexlonglat(coordinate):
+    output = re.search("(\d+.\d+)", numpy.array_str(coordinate))
+    output = output.group()
+    return output
+
+
+# Returns the longitude and latitude for the specified city
+def get_coordinates(city_name):
+    # Opens the list with cities as dataframe
+    world_list = pd.read_csv("worldcities.csv")
+
+    # Remove white spaces & lower case for case insensitive comparison
+    city_name = city_name.strip().lower()
+
+    # Extracts longitude and latitude for the requested city
+    lng = world_list.loc[(world_list["city"].str.strip().str.lower() == city_name), ["lng"]].values
+    lat = world_list.loc[(world_list["city"].str.strip().str.lower() == city_name), ["lat"]].values
+
+    # extracts number since string contains brackets
+    if lng.size > 0 and lat.size > 0:
+        lng2 = regexlonglat(lng)
+        lat2 = regexlonglat(lat)
+        return lat2, lng2
+    else:
+        return
+
+
+# User interaction
+print("---- Weather App ----")
+check = "y"
+while check == "y":
+    city = input("Type a city you want to know the weather of: (type \"n\" to exit)")
+    if city != "n":
+        try:
+            latitude, longitude = get_coordinates(city)
+            # Add functionality to call the weather api and return the weather.
+            print(city)
+            print(longitude)
+            print(latitude)
+        except:
+            print("The city was not found. Try another city.")
+    else:
+        check = "n"
+        print("Application closed")
 
 
 # Wetterdaten von der open-meteo API holen und speichern (verarbeiten)
