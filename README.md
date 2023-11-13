@@ -5,7 +5,7 @@
 
 > **_TODO:_** Konsolen Ein-/Ausgabe implementieren (Kiru)
 
-> **_TODO:_** User-Story 3 (sobald 1&2 fertig)
+> **_TODO:_** User-Story 3 (sobald 1&2 fertig) (Jim)
 
 > **_TODO:_** Präsentation vorbereiten
 >> * **Umfang:** 15min (Termin tbd)
