@@ -54,16 +54,18 @@ while check == "y":
         print("Application closed")
 
 
-# Wetterdaten von der open-meteo API holen und speichern (verarbeiten)
+# API call from open-meteo
 def get_weather():
     url = "https://api.open-meteo.com/v1/forecast"
 
     params = {
         "latitude": 47.3925,
         "longitude": 8.0442,
-        "current": "temperature_2m",
-        "hourly": "temperature_2m",
-        "daily": "weather_code",
+        "current": ["temperature_2m", "relative_humidity_2m", "apparent_temperature", "precipitation", "rain",
+                    "showers", "snowfall", "weather_code", "wind_speed_10m"],
+        "daily": ["weather_code", "temperature_2m_max", "temperature_2m_min", "sunrise", "sunset", "precipitation_sum",
+                  "rain_sum", "showers_sum", "snowfall_sum", "precipitation_hours", "precipitation_probability_max",
+                  "wind_speed_10m_max"],
         "timezone": "Europe/Berlin"
     }
 

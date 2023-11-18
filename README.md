@@ -1,5 +1,4 @@
 # TODO`s
-> **_TODO:_** Attribute gem. User-Story abrufen (API- Abruf anpassen) (Amsler)
 
 > **_TODO:_** Location Parameter extrahieren und API übergeben (Zbinden)
 
