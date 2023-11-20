@@ -5,7 +5,40 @@ import json
 import pandas as pd
 import re
 import numpy
+import warnings
 
+temp_file_path = ''
+
+weather_codes = {
+    0: "Klarer Himmel",
+    1: "Hauptsächlich klar",
+    2: "Teilweise bewölkt",
+    3: "Bedeckt",
+    45: "Nebel und Rauhreif",
+    48: "Nebel und Rauhreif",
+    51: "Nieselregen: Leichte Intensität",
+    53: "Nieselregen: Moderate Intensität",
+    55: "Nieselregen: Starke Intensität",
+    56: "Gefrierender Nieselregen: Leichte Intensität",
+    57: "Gefrierender Nieselregen: Starke Intensität",
+    61: "Regen: Leichte Intensität",
+    63: "Regen: Moderate Intensität",
+    65: "Regen: Starke Intensität",
+    66: "Gefrierender Regen: Leichte Intensität",
+    67: "Gefrierender Regen: Starke Intensität",
+    71: "Schneefall: Leichte Intensität",
+    73: "Schneefall: Moderate Intensität",
+    75: "Schneefall: Starke Intensität",
+    77: "Schneekörner",
+    80: "Regenschauer: Leichte Intensität",
+    81: "Regenschauer: Moderate Intensität",
+    82: "Regenschauer: Starke Intensität",
+    85: "Schneeschauer: Leichte Intensität",
+    86: "Schneeschauer: Starke Intensität",
+    95: "Gewitter: Geringe oder mässige Intensität",
+    96: "Gewitter mit Hagel: Geringe Intensität",
+    99: "Gewitter mit Hagel: Starke Intensität"
+}
 
 # Extracts the long and lat number from the string.
 def regexlonglat(coordinate):
@@ -35,32 +68,14 @@ def get_coordinates(city_name):
         return
 
 
-# User interaction
-print("---- Weather App ----")
-check = "y"
-while check == "y":
-    city = input("Type a city you want to know the weather of: (type \"n\" to exit)")
-    if city != "n":
-        try:
-            latitude, longitude = get_coordinates(city)
-            # Add functionality to call the weather api and return the weather.
-            print(city)
-            print(longitude)
-            print(latitude)
-        except:
-            print("The city was not found. Try another city.")
-    else:
-        check = "n"
-        print("Application closed")
-
-
 # API call from open-meteo
-def get_weather():
+def get_weather(latiude, longitude):
+    global temp_file_path
     url = "https://api.open-meteo.com/v1/forecast"
 
     params = {
-        "latitude": 47.3925,
-        "longitude": 8.0442,
+        "latitude": latitude,
+        "longitude": longitude,
         "current": ["temperature_2m", "relative_humidity_2m", "apparent_temperature", "precipitation", "rain",
                     "showers", "snowfall", "weather_code", "wind_speed_10m"],
         "daily": ["weather_code", "temperature_2m_max", "temperature_2m_min", "sunrise", "sunset", "precipitation_sum",
@@ -68,6 +83,7 @@ def get_weather():
                   "wind_speed_10m_max"],
         "timezone": "Europe/Berlin"
     }
+
 
     try:
         # `request` ist eine Python-Bibliothek, die HTTP-Anfragen vereinfacht (muss heruntergeladen werden)
@@ -84,6 +100,7 @@ def get_weather():
             json.dump(weather_data, temp_file)
             temp_file_path = temp_file.name
             print(f"Daten wurden in die temporäre Datei {temp_file_path} geschrieben.")
+
     except requests.exceptions.RequestException as e:
         print(f"Fehler beim Senden der HTTP-Anfrage: {e}")
     except json.JSONDecodeError as e:
@@ -91,6 +108,55 @@ def get_weather():
     except Exception as e:
         print(f"Allgemeiner Fehler: {e}")
 
+def print_weather(temp_file_path):
+    try:
+        # Öffne die Datei im Lesemodus und lade den Inhalt mit json.loads()
+        with open(temp_file_path, 'r') as file:
+            # Deserialisiere das JSON
+            wetterdaten = json.load(file)
+
+            # Zeige die aktuellen Wetterdaten an
+            aktuelle_wetterdaten = wetterdaten["current"]
+            print("Aktuelle Wetterdaten:")
+            print(f"Zeit: {aktuelle_wetterdaten['time']}")
+            print(f"Temperatur: {aktuelle_wetterdaten['temperature_2m']} °C")
+            print(f"Luftfeuchtigkeit: {aktuelle_wetterdaten['relative_humidity_2m']}%")
+            print(f"scheinbare Temperatur: {aktuelle_wetterdaten['apparent_temperature']} °C")
+            print(f"Niederschlag: {aktuelle_wetterdaten['precipitation']} mm")
+            print(f"Windgeschwindigkeit: {aktuelle_wetterdaten['wind_speed_10m']} km/h")
+            print(f"Wettercode: {weather_codes.get(aktuelle_wetterdaten['weather_code'])}")
+
+    except FileNotFoundError:
+        print(f"Die Datei '{temp_file_path}' wurde nicht gefunden.")
+    except json.JSONDecodeError as e:
+        print(f"Fehler beim Deserialisieren des JSON: {e}")
+    except Exception as e:
+        print(f"Ein Fehler ist aufgetreten: {e}")
+
+
+# User interaction
+print("---- Weather App ----")
+check = "y"
+
+while check == "y":
+    city = input("Type a city you want to know the weather of: (type \"n\" to exit)")
+    if city != "n":
+        try:
+            latitude, longitude = get_coordinates(city)
+            # Add functionality to call the weather api and return the weather.
+            print(city)
+            get_weather(latitude, longitude)
+            print_weather(temp_file_path)
+        except:
+            print("The city was not found. Try another city.")
+    else:
+        check = "n"
+        print("Application closed")
+
 
 if __name__ == "__main__":
     get_weather()
+
+
+
+
