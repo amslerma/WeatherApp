@@ -73,7 +73,7 @@ allgemeiner Wetterbedingungen Wetterzustand
 
 ### User-Story 3: Benutzerdefinierte Einstellungen
 **Als** Benutzer  
-**möchte ich** die Option haben, die Wettereinheiten Europäisch(Celsius/Km/h/mm), Englisch(Fahrenheit/Mph/Inch) zu wählen  
+**möchte ich** die Option haben, die Wettereinheiten "EU" (Celsius/Km/h/mm), "US" (Fahrenheit/Mph/Inch) zu wählen  
 **damit ich** die Daten in einem für mich verständlichen Format sehen kann.
 
 #### Akzeptanzkriterien:

@@ -6,6 +6,8 @@ import pandas as pd
 import re
 import numpy
 import warnings
+from datetime import datetime
+from numpy.core.defchararray import upper
 
 temp_file_path = ''
 
@@ -92,9 +94,9 @@ def get_weather(latiude, longitude):
 
         weather_data = json.loads(response.text)
 
-        # Der Pfad wird relativ zum aktuellen Arbeitsverzeichnis des Projekts angegeben
+        # The path is specified relative to the current working directory of the project
         temp_dir = os.path.join(os.getcwd(), "temp_directory")
-        os.makedirs(temp_dir, exist_ok=True)  # Erstellt das Verzeichnis, falls es nicht existiert
+        os.makedirs(temp_dir, exist_ok=True)  # Creates the directory if it does not exist
 
         with tempfile.NamedTemporaryFile(mode='w', delete=False, dir=temp_dir) as temp_file:
             json.dump(weather_data, temp_file)
@@ -108,23 +110,35 @@ def get_weather(latiude, longitude):
     except Exception as e:
         print(f"Allgemeiner Fehler: {e}")
 
-def print_weather(temp_file_path):
+def print_weather(temp_file_path, unit):
     try:
-        # Öffne die Datei im Lesemodus und lade den Inhalt mit json.loads()
+        # Open the file in read mode and load the content with json.loads()
         with open(temp_file_path, 'r') as file:
             # Deserialisiere das JSON
             wetterdaten = json.load(file)
-
-            # Zeige die aktuellen Wetterdaten an
             aktuelle_wetterdaten = wetterdaten["current"]
+            date_time = datetime.fromisoformat(aktuelle_wetterdaten['time'])
             print("Aktuelle Wetterdaten:")
-            print(f"Zeit: {aktuelle_wetterdaten['time']}")
-            print(f"Temperatur: {aktuelle_wetterdaten['temperature_2m']} °C")
-            print(f"Luftfeuchtigkeit: {aktuelle_wetterdaten['relative_humidity_2m']}%")
-            print(f"scheinbare Temperatur: {aktuelle_wetterdaten['apparent_temperature']} °C")
-            print(f"Niederschlag: {aktuelle_wetterdaten['precipitation']} mm")
-            print(f"Windgeschwindigkeit: {aktuelle_wetterdaten['wind_speed_10m']} km/h")
             print(f"Wettercode: {weather_codes.get(aktuelle_wetterdaten['weather_code'])}")
+            print(f"Luftfeuchtigkeit: {aktuelle_wetterdaten['relative_humidity_2m']}%")
+
+            # The weather data is output here with the EU units
+            if unit == "EU":
+                eu_time = date_time.strftime("%d.%m.%Y %H:%M")
+                print("Zeit:", eu_time)
+                print(f"Temperatur: {aktuelle_wetterdaten['temperature_2m']} °C")
+                print(f"scheinbare Temperatur: {aktuelle_wetterdaten['apparent_temperature']} °C")
+                print(f"Niederschlag: {aktuelle_wetterdaten['precipitation']} mm")
+                print(f"Windgeschwindigkeit: {aktuelle_wetterdaten['wind_speed_10m']} km/h")
+
+            # The weather data is output here with the US units
+            else:
+                print("Zeit: ", date_time)
+                print("Temperatur:", (aktuelle_wetterdaten['temperature_2m'] * 1.8) + 32, "°F")
+                print("Scheinbare Temperatur:", (aktuelle_wetterdaten['apparent_temperature'] * 1.8) + 32, "°F")
+                print("Niederschlag:", (aktuelle_wetterdaten['precipitation'] / 25.4), "inches")
+                print(f"Windgeschwindigkeit:", round((aktuelle_wetterdaten['wind_speed_10m'] / 1.60934), 2), "mph")
+
 
     except FileNotFoundError:
         print(f"Die Datei '{temp_file_path}' wurde nicht gefunden.")
@@ -140,15 +154,19 @@ check = "y"
 
 while check == "y":
     city = input("Type a city you want to know the weather of: (type \"n\" to exit)")
+    unit = upper(input("Type the desired weather unit: US or EU"))
     if city != "n":
-        try:
-            latitude, longitude = get_coordinates(city)
-            # Add functionality to call the weather api and return the weather.
-            print(city)
-            get_weather(latitude, longitude)
-            print_weather(temp_file_path)
-        except:
-            print("The city was not found. Try another city.")
+        if unit == "EU" or unit == "US":
+            try:
+                latitude, longitude = get_coordinates(city)
+                # Add functionality to call the weather api and return the weather.
+                print(city)
+                get_weather(latitude, longitude)
+                print_weather(temp_file_path, unit)
+            except:
+                print("The city was not found. Try another city.")
+        else:
+            print("The unit is not correct.")
     else:
         check = "n"
         print("Application closed")
