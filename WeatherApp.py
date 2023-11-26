@@ -44,7 +44,7 @@ weather_codes = {
 
 # Extracts the long and lat number from the string.
 def regexlonglat(coordinate):
-    output = re.search("(\d+.\d+)", numpy.array_str(coordinate))
+    output = re.search("(\\d+.\\d+)", numpy.array_str(coordinate))
     output = output.group()
     return output
 
@@ -118,10 +118,8 @@ def print_weather(temp_file_path, unit):
             date_time = datetime.fromisoformat(aktuelle_wetterdaten['time'])
 
             tablewidth = max(
-                len(f"Wettercode               | {weather_codes.get(aktuelle_wetterdaten['weather_code'])}"),
-                len(f"Zeit                     | {eu_time}") if 'eu_time' in locals() else 0,
-                len(f"Zeit                     | {date_time}") if 'date_time' in locals() else 0
-            )
+                len(f"Wettercode               | {weather_codes.get(aktuelle_wetterdaten['weather_code'])}"),47)
+
             tablewidth = "-" * tablewidth
             if len(tablewidth) < 43:
                 tablewidth = "-" * 43
@@ -146,8 +144,8 @@ def print_weather(temp_file_path, unit):
 
             else:
                 us_temp = (aktuelle_wetterdaten['temperature_2m'] * 1.8) + 32
-                us_apparent_temp = (aktuelle_wetterdaten['apparent_temperature'] * 1.8) + 32
-                us_precipitation = aktuelle_wetterdaten['precipitation'] / 25.4
+                us_apparent_temp = round(((aktuelle_wetterdaten['apparent_temperature'] * 1.8) + 32),2)
+                us_precipitation = round((aktuelle_wetterdaten['precipitation'] / 25.4),2)
                 us_wind_speed = round((aktuelle_wetterdaten['wind_speed_10m'] / 1.60934), 2)
 
                 print(f"Zeit                     | {date_time}")
@@ -166,23 +164,89 @@ def print_weather(temp_file_path, unit):
     except Exception as e:
         print(f"Ein Fehler ist aufgetreten: {e}")
 
+def print_weather_forecast(temp_file_path, unit):
+    try:
+        with open(temp_file_path, 'r') as file:
+            wetterdaten = json.load(file)
+            forecast_wetterdaten = wetterdaten['daily']
+
+            dates = forecast_wetterdaten['time'][:6]
+            min_temps = forecast_wetterdaten['temperature_2m_min'][:6]
+            max_temps = forecast_wetterdaten['temperature_2m_max'][:6]
+            w_codes = forecast_wetterdaten['weather_code'][:6]
+
+        if unit == "EU":
+            print("")
+            print("\033[1mDatum      | Min Temp (°C) | Max Temp (°C) | Wettercode\033[0m")
+            print("-" * 80)
+
+            for date_str, min_temp, max_temp, code in zip(dates, min_temps, max_temps, w_codes):
+                date = datetime.fromisoformat(date_str)
+                eu_date = date.strftime("%d.%m.%Y")
+                weather_code = weather_codes.get(code)
+
+                print(f"{eu_date} | {min_temp:>13} | {max_temp:>13} | {weather_code} ")
+
+            print("-" * 80)
+            print("")
+
+        else:
+            print("")
+            print("\033[1mDatum      | Min Temp (°F) | Max Temp (°F) | Wettercode\033[0m")
+            print("-" * 80)
+
+            for date_str, min_temp, max_temp, code in zip(dates, min_temps, max_temps, w_codes):
+                weather_code = weather_codes.get(code)
+
+                print(f"{date_str} | {round(((min_temp * 1.8) + 32),2): > 13} | {round(((max_temp * 1.8) + 32),2): > 13} | {weather_code} ")
+
+            print("-" * 80)
+            print("")
+
+
+    except FileNotFoundError:
+        print(f"Die Datei '{temp_file_path}' wurde nicht gefunden.")
+    except json.JSONDecodeError as e:
+        print(f"Fehler beim Deserialisieren des JSON: {e}")
+    except Exception as e:
+        print(f"Ein Fehler ist aufgetreten: {e}")
+
 
 print("---- Weather App ----")
 
 while True:
-    city = input("Type a city you want to know the weather of: (type \"n\" to exit) ")
+    type = input("Please enter the number of the type of weather data you would like to receive: (type \"n\" to exit) \n > '1' = Current weather / '2' = Weather forecast \n > ")
+    if type.lower() == 'n':
+        print("Exiting the program...")
+        break
+
+    city = input("Please enter the city name for which you would like to receive the weather data: (type \"n\" to exit) \n > ")
     if city.lower() == 'n':
         print("Exiting the program...")
         break
 
-    unit = upper(input("Type the desired weather unit: US or EU "))
+    unit = input("Type the desired weather unit: (type \"n\" to exit)\n > 'US' or 'EU': \n > ")
+    if unit.lower() == 'n':
+        print("Exiting the program...")
+        break
+    unit = upper(unit)
 
-    if unit == "EU" or unit == "US":
-        try:
-            latitude, longitude = get_coordinates(city)
-            get_weather(latitude, longitude)
-            print_weather(temp_file_path, unit)
-        except:
-            print("\033[1mWARNING:\033[0m The city was not found. Try another city.")
+    if type == '1':
+        if unit == "EU" or unit == "US":
+            try:
+                latitude, longitude = get_coordinates(city)
+                get_weather(latitude, longitude)
+                print_weather(temp_file_path, unit)
+            except:
+                print("\033[1mWARNING:\033[0m The city was not found, exiting the program...")
+                break
+        else:
+            print("\033[1mWARNING:\033[0m The unit is not correct, exiting the program...")
+            break
+    elif type == '2':
+        latitude, longitude = get_coordinates(city)
+        get_weather(latitude, longitude)
+        print_weather_forecast(temp_file_path, unit)
     else:
-        print("\033[1mWARNING:\033[0m The unit is not correct.")
+        print("\033[1mWARNING:\033[0m Unknown Input.")
+
