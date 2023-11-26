@@ -1,12 +1,12 @@
-import os
-import tempfile
-import requests
 import json
-import pandas as pd
+import os
 import re
-import numpy
-import warnings
+import tempfile
 from datetime import datetime
+
+import numpy
+import pandas as pd
+import requests
 from numpy.core.defchararray import upper
 
 temp_file_path = ''
@@ -112,33 +112,52 @@ def get_weather(latiude, longitude):
 
 def print_weather(temp_file_path, unit):
     try:
-        # Open the file in read mode and load the content with json.loads()
         with open(temp_file_path, 'r') as file:
-            # Deserialisiere das JSON
             wetterdaten = json.load(file)
             aktuelle_wetterdaten = wetterdaten["current"]
             date_time = datetime.fromisoformat(aktuelle_wetterdaten['time'])
-            print("Aktuelle Wetterdaten:")
-            print(f"Wettercode: {weather_codes.get(aktuelle_wetterdaten['weather_code'])}")
-            print(f"Luftfeuchtigkeit: {aktuelle_wetterdaten['relative_humidity_2m']}%")
 
-            # The weather data is output here with the EU units
+            tablewidth = max(
+                len(f"Wettercode               | {weather_codes.get(aktuelle_wetterdaten['weather_code'])}"),
+                len(f"Zeit                     | {eu_time}") if 'eu_time' in locals() else 0,
+                len(f"Zeit                     | {date_time}") if 'date_time' in locals() else 0
+            )
+            tablewidth = "-" * tablewidth
+            if len(tablewidth) < 43:
+                tablewidth = "-" * 43
+
+            print("")
+            print("\033[1mBeschreibung             | Wert\033[0m")
+            print(tablewidth)
+
+            print(f"Wettercode               | {weather_codes.get(aktuelle_wetterdaten['weather_code'])}")
+            print(f"Luftfeuchtigkeit         | {aktuelle_wetterdaten['relative_humidity_2m']}%")
+
             if unit == "EU":
                 eu_time = date_time.strftime("%d.%m.%Y %H:%M")
-                print("Zeit:", eu_time)
-                print(f"Temperatur: {aktuelle_wetterdaten['temperature_2m']} °C")
-                print(f"scheinbare Temperatur: {aktuelle_wetterdaten['apparent_temperature']} °C")
-                print(f"Niederschlag: {aktuelle_wetterdaten['precipitation']} mm")
-                print(f"Windgeschwindigkeit: {aktuelle_wetterdaten['wind_speed_10m']} km/h")
+                print(f"Zeit                     | {eu_time}")
+                print(f"Temperatur               | {aktuelle_wetterdaten['temperature_2m']} °C")
+                print(f"Scheinbare Temperatur    | {aktuelle_wetterdaten['apparent_temperature']} °C")
+                print(f"Niederschlag             | {aktuelle_wetterdaten['precipitation']} mm")
+                print(f"Windgeschwindigkeit      | {aktuelle_wetterdaten['wind_speed_10m']} km/h")
 
-            # The weather data is output here with the US units
+                print(tablewidth)
+                print("")
+
             else:
-                print("Zeit: ", date_time)
-                print("Temperatur:", (aktuelle_wetterdaten['temperature_2m'] * 1.8) + 32, "°F")
-                print("Scheinbare Temperatur:", (aktuelle_wetterdaten['apparent_temperature'] * 1.8) + 32, "°F")
-                print("Niederschlag:", (aktuelle_wetterdaten['precipitation'] / 25.4), "inches")
-                print(f"Windgeschwindigkeit:", round((aktuelle_wetterdaten['wind_speed_10m'] / 1.60934), 2), "mph")
+                us_temp = (aktuelle_wetterdaten['temperature_2m'] * 1.8) + 32
+                us_apparent_temp = (aktuelle_wetterdaten['apparent_temperature'] * 1.8) + 32
+                us_precipitation = aktuelle_wetterdaten['precipitation'] / 25.4
+                us_wind_speed = round((aktuelle_wetterdaten['wind_speed_10m'] / 1.60934), 2)
 
+                print(f"Zeit                     | {date_time}")
+                print(f"Temperatur               | {us_temp} °F")
+                print(f"Scheinbare Temperatur    | {us_apparent_temp} °F")
+                print(f"Niederschlag             | {us_precipitation} inches")
+                print(f"Windgeschwindigkeit      | {us_wind_speed} mph")
+
+                print(tablewidth)
+                print("")
 
     except FileNotFoundError:
         print(f"Die Datei '{temp_file_path}' wurde nicht gefunden.")
@@ -148,33 +167,22 @@ def print_weather(temp_file_path, unit):
         print(f"Ein Fehler ist aufgetreten: {e}")
 
 
-# User interaction
 print("---- Weather App ----")
-check = "y"
 
-while check == "y":
-    city = input("Type a city you want to know the weather of: (type \"n\" to exit)")
-    unit = upper(input("Type the desired weather unit: US or EU"))
-    if city != "n":
-        if unit == "EU" or unit == "US":
-            try:
-                latitude, longitude = get_coordinates(city)
-                # Add functionality to call the weather api and return the weather.
-                print(city)
-                get_weather(latitude, longitude)
-                print_weather(temp_file_path, unit)
-            except:
-                print("The city was not found. Try another city.")
-        else:
-            print("The unit is not correct.")
+while True:
+    city = input("Type a city you want to know the weather of: (type \"n\" to exit) ")
+    if city.lower() == 'n':
+        print("Exiting the program...")
+        break
+
+    unit = upper(input("Type the desired weather unit: US or EU "))
+
+    if unit == "EU" or unit == "US":
+        try:
+            latitude, longitude = get_coordinates(city)
+            get_weather(latitude, longitude)
+            print_weather(temp_file_path, unit)
+        except:
+            print("\033[1mWARNING:\033[0m The city was not found. Try another city.")
     else:
-        check = "n"
-        print("Application closed")
-
-
-if __name__ == "__main__":
-    get_weather()
-
-
-
-
+        print("\033[1mWARNING:\033[0m The unit is not correct.")
