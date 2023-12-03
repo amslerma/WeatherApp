@@ -3,7 +3,6 @@ import os
 import re
 import tempfile
 from datetime import datetime
-
 import numpy
 import pandas as pd
 import requests
