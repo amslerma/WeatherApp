@@ -1,22 +1,3 @@
-# TODO`s
-> **_TODO:_** Präsentation vorbereiten
->> * **Umfang:** 15min (Termin tbd)
->>   * Thema vorstellen
->>   * Ziele (User-stories),
->>   * PM (Arbeitsform, Zusammenarbeit, Learnings (/Probleme),
->>   * Live-demo Applikation
-
-> **_TODO:_** Abschlussdokumentation erstellen
->> * The project work is due on **January 7, 2024, 23.55** (Moodle upload, one PDF file per group).
->> * This PDF file should comprise:
->>      * a short presentation
->>      * the GitHub URL (with a README file), where the PyCharm application is hosted
-
-> **_TODO:_** Datenmodellierung & Beschreibung
-
-> **_TODO:_** README vervollständigen
-
----
 # WETTER-APP PROJEKT
 
 **Gruppe:** Marco Amsler, Jim Stewart, Kirushanth Suthananthan, Dominik Meyer, Joshua Zbinden<br>
@@ -29,17 +10,14 @@
 
 ---
 ## PROJEKT-BESCHREIBUNG
-Eine Wetter-App, die Benutzern erlaubt, aktuelle Wetterinformationen abzurufen. Nutzer können Wetterdaten wie **Temperatur**, 
-    **Niederschlagswahrscheinlichkeit (Regen, Schauer, Schnee)**, **Windgeschwindigkeit** und **Wetterzustand (gem. WMO)** für verschiedene Städte abrufen. 
-    Das Ziel ist es, präzise Wettervorhersagen zur Verfügung zu stellen, die für die tägliche Planung von Aktivitäten im Freien nützlich sind.
+Eine Wetter-App, die Benutzern erlaubt, aktuelle Wetterinformationen abzurufen. 
+Nutzer können Wetterdaten wie **Temperatur**, **Niederschlagswahrscheinlichkeit (Regen, Schauer, Schnee)**, 
+**Windgeschwindigkeit** und **Wetterzustand (gemäss World Meteorological Organization (WMO))** für verschiedene Städte abrufen. Das Ziel ist es, präzise 
+Wettervorhersagen zur Verfügung zu stellen, die für die tägliche Planung von Aktivitäten im Freien nützlich sind.
 
-Voraussichtliche Beschränkungen / out of Scope (auf Grund der zunehmenden Komplexität)
-- lokales file mit statischen Wetterdaten eines Wetterdienstes
-- Ggf. beschränkung auf Orte/Städte in der Schweiz
-- kein UI, sondern eine Konsolen basierte Ein-/Ausgabe der benutzerinteraktionen
-
-Mögliche Datenquelle:
-https://open-meteo.com/
+---
+## Beschränkungen / out of Scope
+- kein grafisches UI, sondern eine Konsolen basierte Ein-/Ausgabe
 
 ---
 ## USER-STORIES
@@ -51,18 +29,17 @@ https://open-meteo.com/
 
 #### Akzeptanzkriterien:
 - Ich kann meine Stadt eingeben und eine Anfrage stellen.
-- Ich sehe die aktuellen Wetterbedingungen, einschliesslich Temperatur und Niederschlag, Niederschlagswahrscheinlichkeit (Regen, Schauer, Schnee),
-Windgeschwindigkeit und Wetterzustand gem WMO.
+- Ich sehe die aktuellen Wetterbedingungen, einschliesslich Wetterzustand gem WMO, Luftfeuchtigkeit, Temperatur, Niederschlagsmenge und Windgeschwindigkeit 
 
 ### User-Story 2: Vorhersage
 **Als** Reisende<br>
-**möchte ich** eine 7-Tage-Wettervorhersage für beliebige Orte erhalten  
+**möchte ich** eine 5-Tage-Wettervorhersage für beliebige Orte erhalten.  
 **damit ich** meine Reisen entsprechend planen kann.
 
 #### Akzeptanzkriterien:
 - Ich kann den Namen einer Stadt eingeben und eine Wettervorhersage anfordern.
 - Ich erhalte eine Wettervorhersage für die nächsten fünf Tage, einschliesslich Temperaturtrends und 
-allgemeiner Wetterbedingungen Wetterzustand
+allgemeiner Wetterbedingungen.
 
 ### User-Story 3: Benutzerdefinierte Einstellungen
 **Als** Benutzer  
@@ -71,31 +48,57 @@ allgemeiner Wetterbedingungen Wetterzustand
 
 #### Akzeptanzkriterien:
 - Ich kann meine bevorzugte Temperatureinheit auswählen.
-- Die Wetterdaten werden in der von mir ausgewählten Einheit angezeigt
+- Die Wetterdaten werden in der von mir ausgewählten Einheit angezeigt.
 
 ---
 ## DATEN
-
-### ER-Modell, Diagramm, Relationales-Modell??
-> **_TODO:_** Bei ER-Diagram aus pycharm ziehen, wenn alles implementiert
+- Datenquelle **Wetterdaten**: https://open-meteo.com/
+- Datenquelle **Standorte**: ```worldcities.csv``` mit über 40'000 Städten und dazugehörigen Geo-Referenzpunkten
 
 ---
 ## FUNKTIONEN
-> **_TODO:_** Klassen und Funktionen auflisten / beschreiben
 
+### Übersicht "WeatherApp.py"
+Funktion(Argumente)::Rückgabewert
+```mermaid
+classDiagram
+  class WeatherApp {
+    +validateDataType(dataType: string): boolean
+    +validateCityName(city: string): boolean
+    +validateUnit(unit: string): string
+    +getCoordinates(cityName: string): [string, string]
+    +getWeather(latitude: string, longitude: string): string
+    +printWeather(tempFilePath: string, unit: string): void
+    +printWeatherForecast(tempFilePath: string, unit: string): void
+    +deleteTempFile(tempFilePath: string): void
+  }
+
+```
 ---
 ## REFLEXION
-* Ziele
-* Projektbeschreibung, User-Stories, Applikation
-* Datenmodell?
-* Projektmanagement
-  * Arbeitsform / Zusammenarbeit
-  * Verwendete Applikationen
-    * **PyCharm:** Programmierumgebung
-    * **GitHub:** Versionsverwaltung
-    * **Whatsapp:** Info-Austausch
-  * Schwierigkeiten
-  * Learnings
+Ziel der Projektarbeit war es, unsere Kenntnisse in der Programmiersprache ```Python``` zu vertiefen und sie in der Praxis 
+anzuwenden.
+
+Unser Team entschied sich für die Entwicklung einer einfachen **Wetter-Applikation**. Dabei wurde schnell klar, dass wir auf 
+eine externe Schnittstelle zugreifen müssen, um Wetterdaten abzurufen. Wir haben die benötigten Funktionen sorgfältig 
+ausgewählt, um sicherzustellen, dass sie realistische Anforderungen erfüllen.
+
+Für die (zusammen) Arbeit und Kommunikation haben wir folgende Tools eingesetzt:
+* **Individuelle IDE`S:** Programmierumgebung
+* **GitHub:** Versionsverwaltung
+* **Whatsapp und MS-Teams:** Informationsaustausch
+
+Eine Herausforderung bestand darin, die Aufgaben innerhalb des Projekts aufzuteilen, insbesondere weil wir fünf 
+Teammitglieder waren, die zuvor noch nicht zusammengearbeitet hatten. Trotzdem gelang es uns, die Arbeit effektiv zu 
+koordinieren und jeder trug seinen Teil zum erfolgreichen Abschluss des Projekts bei.
+
+Dieses Projekt war äusserst lehrreich und deckte viele der im Unterricht behandelten Themen ab. Besonders spannend war 
+es, die Dokumentation öffentlicher Schnittstellen zu studieren und zu sehen, wie diese mit ```Python``` und anderen 
+Datenquellen verknüpft werden können. 
+
+Dieses Projekt hat unsere Fähigkeiten in der Python-Programmierung erweitert und uns wertvolle Einblicke in die Arbeit 
+mit APIs und deren nutzung innerhalb einer Applikation verschafft.
+
 ---
 
 

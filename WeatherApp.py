@@ -318,7 +318,6 @@ def validate_unit(unit):
 
 
 # Console "UI" MAIN
-
 if __name__ == "__main__":
     print("---- Weather App ----")
 
