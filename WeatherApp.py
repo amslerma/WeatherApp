@@ -143,6 +143,7 @@ def get_weather(latitude, longitude):
     except Exception as e:
         print(f"General error: {e}")
 
+
 # Deleting local file
 def delete_temp_file(temp_file_path):
     try:
@@ -152,6 +153,7 @@ def delete_temp_file(temp_file_path):
         print(f"Temporary file not found: {temp_file_path}")
     except Exception as e:
         print(f"Error deleting temporary file: {e}")
+
 
 def print_weather(temp_file_path, unit):
     """
@@ -278,12 +280,14 @@ def print_weather_forecast(temp_file_path, unit):
     except Exception as e:
         print(f"General error: {e}")
 
+
 # User-Input validation
 def validate_data_type(data_type):
     if data_type not in ['1', '2']:
         print("Invalid data type. Please enter '1' for Current weather or '2' for Weather forecast.")
         return False
     return True
+
 
 def city_exists_in_database(city):
     # Open List of cities
@@ -298,6 +302,7 @@ def city_exists_in_database(city):
     else:
         return False
 
+
 def validate_city_name(city):
     if not city.strip():
         print("City name cannot be empty.")
@@ -309,11 +314,12 @@ def validate_city_name(city):
         print(f"City '{city}' not found in the database. Please enter a valid city.")
         return False
 
+
 def validate_unit(unit):
-    unit = unit.upper()
+    unit = unit.strip().upper()
     if unit not in ['US', 'EU']:
         print("Invalid unit. Please enter 'US' or 'EU'.")
-        return False
+        return
     return unit
 
 
@@ -323,7 +329,8 @@ if __name__ == "__main__":
 
     while True:
         data_type = input(
-            "Please enter the number of the type of weather data you would like to receive: (type \"n\" to exit) \n > '1' "
+            "Please enter the number of the type of weather data you would like to receive: (type \"n\" to exit) \n > "
+            "'1'"
             "= Current weather / '2' = Weather forecast \n > ")
         if data_type.lower() == 'n':
             print("Exiting the program...")
@@ -332,7 +339,8 @@ if __name__ == "__main__":
             continue
 
         city = input(
-            "Please enter the city name for which you would like to receive the weather data: (type \"n\" to exit) \n > ")
+            "Please enter the city name for which you would like to receive the weather data: (type \"n\" to exit) \n "
+            "> ")
         if city.lower() == 'n':
             print("Exiting the program...")
             break
@@ -345,19 +353,18 @@ if __name__ == "__main__":
             print("Exiting the program...")
             break
 
-        validated_unit = validate_unit(unit)
-
-        if not validated_unit:
+        unit = validate_unit(unit)
+        if not unit:
             continue
 
         if data_type == '1':
-                try:
-                    latitude, longitude = get_coordinates(city)
-                    get_weather(latitude, longitude)
-                    print_weather(temp_file_path, unit)
-                except:
-                    print("\033[1mWARNING:\033[0m The city was not found, exiting the program...")
-                    break
+            try:
+                latitude, longitude = get_coordinates(city)
+                get_weather(latitude, longitude)
+                print_weather(temp_file_path, unit)
+            except:
+                print("\033[1mWARNING:\033[0m The city was not found, exiting the program...")
+                break
         elif data_type == '2':
             latitude, longitude = get_coordinates(city)
             get_weather(latitude, longitude)
