@@ -1,2 +1,6 @@
 # Temp files from API call
+.temp_directory
 temp_directory/temp_file_name.json
+
+# .idea
+.idea
